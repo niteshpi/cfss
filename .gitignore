@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.ipynb_checkpoints/
+.env
+# Large / generated data stays out of git; checksums are recorded in ENV.md
+results/raw/*
+!results/raw/.gitkeep
+results/ttgir/
+logs/*
+!logs/.gitkeep
+*.parquet
