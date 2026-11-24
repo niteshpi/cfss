@@ -67,7 +67,7 @@ Phase 2 starts with a 2-hour novelty check (also search "conformal autotuning" a
 
 ## Environment
 
-- **Compute:** UW CAE **Euler** cluster (`ssh <netid>@euler.engr.wisc.edu`), Slurm `research` partition. Jobs can be preempted and are requeued, so code must checkpoint/resume. GPUs are selected via features (`--constraint` / `--prefer`). Exact GPU models and `--gres` spelling are **unknown**: discover them with `sinfo -o "%P %f"` and `sinfo -N -o "%N %P %f %G"`, then record them in ENV.md. Use one GPU model for all experiments.
+- **Compute:** UW CAE **Euler** cluster (`ssh <netid>@euler.engr.wisc.edu`), Slurm `research` partition. Jobs can be preempted and are requeued, so code must checkpoint/resume. GPUs (found Nov 24, details in ENV.md): H100 ×8, A100 ×8, RTX A4500 ×32, RTX 4000 Ada ×48, RTX 2080 Ti ×2; no AMD GPUs. Pin the model with `--gres=gpu:<type>:1` (types `h100`, `a100`, `rtxa4500`, `rtx4000ada`). Primary GPU for all phase 1 measurements: A100 (fallback A4500); H100 and another type for cross-GPU E7. Use one GPU model for all core experiments.
 - **Python:** `module load conda/miniforge && bootstrap-conda` (don't run `conda init`); Python 3.12; PyTorch 2.15 with cu132 wheels (`--index-url https://download.pytorch.org/whl/cu132`), falling back to cu128 if the driver is older than 580; the Triton version the torch wheel pins; then `pip install -r requirements.txt`. xDSL provides the `sched` dialect.
 - **Slurm scripts:** set `TRITON_CACHE_DIR=/tmp/$USER/triton-$SLURM_JOB_ID`. Nsight Compute may be blocked; nothing depends on it.
 - **Laptop:** an RTX 3060 (sm_86), for prototyping only.
@@ -102,6 +102,7 @@ Skeleton exists: directories, empty code/config files and per-folder READMEs. Ke
 ## Open decisions
 
 - Input dtype (FP16, BF16 or FP32).
+- Whether `ent_gpu` nodes (A100, H100) are open to this account; NVIDIA→AMD transfer needs an AMD GPU from outside Euler.
 - Skinny decode M values; exact non-aligned sizes.
 - Cascade guarantee target (95% / within 3%) and whether the cold-start scenario convinces the advisor.
 - Phase 2 token budget.
